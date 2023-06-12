@@ -16,7 +16,7 @@ namespace RabbitMQDemo.Controllers
             int x = 1;
             while (x <= cantidad)
             {
-                _rabbitMQProducer.SendMessage($"Mensage{x}");
+                _rabbitMQProducer.SendMessage($"Mensaje {x}: ", "Notificación");
                 x++;
                 //Thread.Sleep(5000);
             }
@@ -26,15 +26,23 @@ namespace RabbitMQDemo.Controllers
         [HttpPost("RabbitSingleMessage")]
         public bool SendMenssage(string message)
         {
-            _rabbitMQProducer.SendMessage($"Nuevo: {message}");
+            _rabbitMQProducer.SendMessage($"Nuevo: {message}", "Notificación");
             return true;
         }
 
         [HttpPost("RabbitFailureMessage")]
-        public bool FailureMenssage( string message)
+        public bool FailureMenssage(int cantidad)
         {
-            _rabbitMQProducer.SendMessage($"Mensage{message}");
+            int x = 1;
+            while (x <= cantidad)
+            {
+                _rabbitMQProducer.SendMessage($"Error de prueba{x}: ", null);
+                x++;
+                //Thread.Sleep(5000);
+            }
             return true;
+            //_rabbitMQProducer.SendMessage("Prueba error", null);
+            //return true;
         }
     }
 }

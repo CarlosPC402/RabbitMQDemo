@@ -36,7 +36,7 @@ namespace RabbitMQDemo.Controllers
         public async Task<ActionResult<IEnumerable<User>>> NewUser([FromBody]User user)
         {
             var users = _userRepository.NewUser(user);
-            _rabbitMQProducer.SendMessage(user);
+            _rabbitMQProducer.SendMessage(user, "Notificación");
             return Ok(users);
         }
 

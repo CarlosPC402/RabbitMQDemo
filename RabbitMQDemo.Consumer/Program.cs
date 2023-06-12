@@ -40,6 +40,12 @@ consumer.Received += (model, ea) =>
         var body = ea.Body.ToArray();
         var message = Encoding.UTF8.GetString(body);
         //Console.WriteLine("Mensaje recibido: {0}", message);
+        var properties = ea.BasicProperties;
+        if (properties.Headers != null && properties.Headers.ContainsKey("messageType"))
+        {
+            var messageType = Encoding.UTF8.GetString((byte[])properties.Headers["messageType"]);
+            Console.WriteLine("Tipo de mensaje: " + messageType.ToUpper());
+        }
         InsertToBD(message);
         channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
         Thread.Sleep(5000);
@@ -47,7 +53,7 @@ consumer.Received += (model, ea) =>
     catch (Exception e)
     {
         channel.BasicPublish(exchange: "",
-                             routingKey: "fallidas",
+                             routingKey: "Fallidas",
                              basicProperties: null,
                              body: ea.Body);
 
@@ -62,5 +68,5 @@ channel.BasicConsume(queue: "PilaPrincipal",
 Console.ReadKey();
 
 void InsertToBD(string message) {
-    Console.WriteLine($"Inserting message to BD: {message}");
+    Console.WriteLine($"Insertando mensaje en BD: {message}");
 }
